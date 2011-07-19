@@ -10,10 +10,10 @@ my $term = Term::ReadLine->new('Twitcli app');
 # my $prompt = "Enter Twitter username: ";
 # my $OUT = $term->OUT || \*STDOUT;
 
-my $consumer_key = '#your consumer key here';
-my $consumer_secret = '#your consumer secret key';
-my $access_token = '#your access token here';
-my $access_token_secret = '#your access token secret here';
+my $consumer_key = 'DvzuC1tDRHqqTQuVQlZlg';
+my $consumer_secret = 'af0ARNMHtYgaEVPNTXQS1wPtYCXC4Cf0IpWoNCqA4';
+my $access_token = '125117278-VwGfrNyda3PtFiHqhaO2EdANBeu2ph6VL0JD7Fhf';
+my $access_token_secret = 'YOkXcL6rL2yvD79J4MhsLALFxAXHvZdQEDhN9Nw0O1E';
 
 my $nt = Net::Twitter->new(
     traits => ['API::REST', 'OAuth'],
