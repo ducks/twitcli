@@ -46,14 +46,13 @@ unless ( $nt->authorized ) {
    YAML::XS::DumpFile( "$home_dir/.twitcli", { twitter_access_token => "$access_token", twitter_access_token_secret => "$access_token_secret" });
 }
 
-# my $result = $nt->update({ status => 'Testing from Twitcli, cli twitter client being developed by me'});
+# my $result = $nt->update({ status => '@jeffschuler Test mention from twitcli, a command line linux client!'});
 
-eval {
-    my $statuses = $nt->friends_timeline({ count => 100 });
-    for my $status ( @$statuses ) {
-        print "$status->{created_at} <$status->{user}{screen_name}> $status->{text} \n";
-    }
-};
+my $statuses = $nt->friends_timeline({ count => 100 });
+for my $status ( reverse(@$statuses) ) {
+    print "$status->{created_at} <$status->{user}{screen_name}> $status->{text} \n";
+}
+
 
 
 # while ( defined ($_ = $term->readline($prompt)) ) {
