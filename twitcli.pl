@@ -4,16 +4,20 @@ use strict;
 use Term::ReadLine;
 use Net::Twitter;
 use Scalar::Util 'blessed';
+use File::HomeDir;
+use YAML::XS;
+use Data::Dumper;
+use feature 'say';
 
-
+my $home_dir = File::HomeDir->my_home;
 my $term = Term::ReadLine->new('Twitcli app');
 # my $prompt = "Enter Twitter username: ";
 # my $OUT = $term->OUT || \*STDOUT;
 
 my $consumer_key = 'DvzuC1tDRHqqTQuVQlZlg';
 my $consumer_secret = 'af0ARNMHtYgaEVPNTXQS1wPtYCXC4Cf0IpWoNCqA4';
-my $access_token = '125117278-VwGfrNyda3PtFiHqhaO2EdANBeu2ph6VL0JD7Fhf';
-my $access_token_secret = 'YOkXcL6rL2yvD79J4MhsLALFxAXHvZdQEDhN9Nw0O1E';
+
+
 
 my $nt = Net::Twitter->new(
     traits => ['API::REST', 'OAuth'],
@@ -21,19 +25,25 @@ my $nt = Net::Twitter->new(
     consumer_secret => $consumer_secret,
 );
 
-if ($access_token && $access_token_secret) {
-  $nt->access_token($access_token);
-  $nt->access_token_secret($access_token_secret);
+# check for file existence because otherwise the access tokens are not present - don't know if this is a best practice, need feedback
+if (-e "$home_dir/.twitcli") {
+  my $twitter_config = YAML::XS::LoadFile( "$home_dir/.twitcli" );
+  # say Dumper($twitter_config);
+  if ($twitter_config->{'twitter_access_token'} && $twitter_config->{'twitter_access_token_secret'}) {   
+     $nt->access_token($twitter_config->{'twitter_access_token'});
+     $nt->access_token_secret($twitter_config->{'twitter_access_token_secret'});
+  }
 }
 
 unless ( $nt->authorized ) {
     # Not authed yet, so do it
-   print "Authorize this app at ", $nt->get_authorization_url, " and enter the PIN#\n";
-
+   print "Authorize this app at ", $nt->get_authorization_url, " and enter the PIN #\n";
    my $pin = <STDIN>;
    chomp $pin;
 
    my ($access_token, $access_token_secret, $user_id, $screen_name) = $nt->request_access_token(verifier => $pin);
+
+   YAML::XS::DumpFile( "$home_dir/.twitcli", { twitter_access_token => "$access_token", twitter_access_token_secret => "$access_token_secret" });
 }
 
 # my $result = $nt->update({ status => 'Testing from Twitcli, cli twitter client being developed by me'});
