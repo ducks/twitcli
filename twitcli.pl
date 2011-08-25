@@ -50,3 +50,13 @@ my $statuses = $nt->friends_timeline({ count => 100 });
 for my $status ( reverse(@$statuses) ) {
     print "$status->{created_at} <$status->{user}{screen_name}> $status->{text} \n";
 }
+
+my $term = new Term::ReadLine 'twitcli$';
+print "$nt->{user}{screen_name}\@twitcli\$ ";
+my $command = <STDIN>;
+
+if ( $command == 'update' ) {
+  for my $status ( reverse(@$statuses) ) {
+    print "$status->{created_at} <$status->{user}{screen_name}> $status->{text} \n";
+  }
+}
