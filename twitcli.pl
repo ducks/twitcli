@@ -76,11 +76,11 @@ sub twitcli_command_prompt {
   print "$username->[0]{user}{screen_name}\@twitcli\$ ";
   my $command = <STDIN>;
 
-  if ( $command == 'update' ) {
+  if ( $command eq 'update' ) {
     show_friends_timeline();
   }  
   
-  if ( $command == 'status' ) {
+  if ( $command eq 'status' ) {
     update_status();
   }
 }
