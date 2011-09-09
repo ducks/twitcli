@@ -84,6 +84,7 @@ sub update_status {
     my $status_update = <STDIN>;
     chomp $status_update;
     $nt->update($status_update);
+    show_friends_timeline();
     twitcli_command_prompt();
 }
 
