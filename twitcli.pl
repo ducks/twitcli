@@ -11,7 +11,7 @@ use feature 'say';
 
 my $home_dir = File::HomeDir->my_home;
 
-
+my $command = '';
 
 my $consumer_key = 'DvzuC1tDRHqqTQuVQlZlg';
 my $consumer_secret = 'af0ARNMHtYgaEVPNTXQS1wPtYCXC4Cf0IpWoNCqA4';
@@ -35,7 +35,7 @@ if (-e "$home_dir/.twitcli") {
 
 unless ( $nt->authorized ) {
     # Not authed yet, so do it
-   print "Authorize this app at ", $nt->get_authorization_url, " and enter the PIN #\n";
+   print "Authorize this app at ", $nt->get_authorization_url, " and enter the PIN # ";
    my $pin = <STDIN>;
    chomp $pin;
 
@@ -45,18 +45,39 @@ unless ( $nt->authorized ) {
 }
 
 
+show_friends_timeline();
 
-my $statuses = $nt->friends_timeline({ count => 100 });
-for my $status ( reverse(@$statuses) ) {
-    print "$status->{created_at} <$status->{user}{screen_name}> $status->{text} \n";
+# subroutine to show the twitcli command line prompt
+sub twitcli_command_prompt {
+  my $term = new Term::ReadLine 'twitcli$';
+  my $username = $nt->user_timeline();
+  my $status_command = 'status';
+  my $update_command = 'update';
+  print "$username->[0]{user}{screen_name}\@twitcli\$ ";
+  my $command = <STDIN>;
+
+  if ( $command eq $update_command ) {
+    show_friends_timeline();
+  }  
+  
+  if ( $command eq $status_command ) {
+    update_status();
+  }
 }
 
-my $term = new Term::ReadLine 'twitcli$';
-print "$nt->{user}{screen_name}\@twitcli\$ ";
-my $command = <STDIN>;
-
-if ( $command == 'update' ) {
+# subroutine to show your friends status updates in a timeline
+sub show_friends_timeline {
+  my $statuses = $nt->friends_timeline({ count => 100 });
   for my $status ( reverse(@$statuses) ) {
     print "$status->{created_at} <$status->{user}{screen_name}> $status->{text} \n";
   }
+  twitcli_command_prompt();
+}
+
+# subroutine to update your status
+sub update_status {
+    print "Enter status: ";
+    my $status_update = <STDIN>;
+    $nt->update($status_update);
+    twitcli_command_prompt();
 }
