@@ -53,6 +53,22 @@ unless ( $nt->authorized ) {
 
 show_friends_timeline();
 
+# subroutine to show the twitcli command line prompt
+sub twitcli_command_prompt {
+  my $username = $nt->user_timeline();
+  print "$username->[0]{user}{screen_name}\@twitcli\$ ";
+  my $command = <STDIN>;
+  chomp $command;
+
+  if ( $command eq 'update' ) {
+    show_friends_timeline();
+  }  
+  
+  if ( $command eq 'tweet' ) {
+    update_status();
+  }
+}
+
 # subroutine to show your friends status updates in a timeline
 sub show_friends_timeline {
   my $statuses = $nt->friends_timeline({ count => 100 });
@@ -64,23 +80,10 @@ sub show_friends_timeline {
 
 # subroutine to update your status
 sub update_status {
-    print "Enter status: ";
+    print "Enter tweet: ";
     my $status_update = <STDIN>;
+    chomp $status_update;
     $nt->update($status_update);
     twitcli_command_prompt();
 }
 
-# subroutine to show the twitcli command line prompt
-sub twitcli_command_prompt {
-  my $username = $nt->user_timeline();
-  print "$username->[0]{user}{screen_name}\@twitcli\$ ";
-  my $command = <STDIN>;
-
-  if ( $command eq 'update' ) {
-    show_friends_timeline();
-  }  
-  
-  if ( $command eq 'status' ) {
-    update_status();
-  }
-}

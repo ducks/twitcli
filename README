@@ -1,0 +1,15 @@
+Welcome and thanks for trying and testing twitcli.
+
+Twitcli is a command line based twitter application for linux.
+It's only in version 1.0 (or whatever) and is pretty simple so far.
+Your start by simply running the script with perl twitcli.pl 
+This will run the script and ask you to authorize the app if it's your first time.
+Your timeline will then be output along with a command prompt.
+The app only has two commands thus far.
+"update" will update the timeline.
+"tweet" will post a new tweet.
+
+
+Thanks again!
+
+ducks
